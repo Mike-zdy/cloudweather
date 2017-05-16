@@ -1,10 +1,13 @@
 package com.zdy.cloudweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.zdy.cloudweather.db.City;
 import com.zdy.cloudweather.db.County;
 import com.zdy.cloudweather.db.Province;
+import com.zdy.cloudweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,5 +84,21 @@ public class Utility {  //Utility: n. 实用；效用；公共设施；功用 ad
             }
         }
         return false;
+    }
+
+    /**
+     * 将返回的JSON数据解析成Weather实体类
+     */
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject=new JSONObject(response);
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
+            String weatherContent=jsonArray.getJSONObject(0).toString();
+            Log.d("UtilityHandleWeather","weatherContent is "+weatherContent);
+            return new Gson().fromJson(weatherContent,Weather.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
